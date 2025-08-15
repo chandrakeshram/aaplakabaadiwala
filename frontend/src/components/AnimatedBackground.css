@@ -1,19 +1,18 @@
 /* src/components/AnimatedBackground.css */
-
-/* Define gradient colors for light mode */
 :root {
-  --gradient-1: rgba(187, 230, 200, 0.5); /* Light green */
-  --gradient-2: rgba(190, 200, 255, 0.5); /* Light blue */
-  --gradient-3: rgba(255, 220, 180, 0.5); /* Light orange */
-  --bg-color: #f0f4f8; /* Very light gray */
+  /* Light Mode Colors */
+  --gradient-1: rgba(144, 238, 144, 0.6); /* Green with higher opacity */
+  --gradient-2: rgba(173, 216, 230, 0.6); /* Blue with higher opacity */
+  --gradient-3: rgba(255, 218, 185, 0.6); /* Peach with higher opacity */
+  --bg-color: #f4f4f4; /* Subtle light gray */
 }
 
-/* Define gradient colors for dark mode */
 .dark {
-  --gradient-1: rgba(71, 187, 117, 0.4);  /* Green for recycling */
-  --gradient-2: rgba(108, 117, 125, 0.4); /* Gray for metal/industry */
-  --gradient-3: rgba(245, 158, 11, 0.4);  /* Orange for energy/movement */
-  --bg-color: #1a202c; /* Dark grayish base color */
+  /* Dark Mode Colors */
+  --gradient-1: rgba(46, 204, 113, 0.5);  /* Vibrant Green */
+  --gradient-2: rgba(52, 152, 219, 0.5);  /* Deep Blue */
+  --gradient-3: rgba(243, 156, 18, 0.5);  /* Action Orange */
+  --bg-color: #1a1a2e; /* Deep purple-black */
 }
 
 .animated-background-container {
@@ -23,7 +22,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: var(--bg-color); /* Use the CSS variable */
+  background: var(--bg-color);
   z-index: -10;
 }
 

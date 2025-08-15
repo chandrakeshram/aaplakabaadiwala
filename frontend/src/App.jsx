@@ -15,7 +15,7 @@ export default function App() {
       
       {/* This main container holds all your page content and the background */}
       {/* Its position is set to relative, which is a key part of the fix */}
-      <main className="relative pt-24 p-6 md:p-12 min-h-screen text-gray-900 dark:text-white transition-colors duration-300">
+      <main className="relative w-full -mt-10 pt-24  min-h-screen text-gray-900 dark:text-white transition-colors duration-300">
         
         {/* The background is placed here and will only fill the <main> tag */}
         <AnimatedBackground />

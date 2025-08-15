@@ -1,15 +1,13 @@
-// src/components/Header.jsx
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from 'react-router-dom';
-import { Menu, X, Home, Info, Briefcase, Mail } from "lucide-react";
+import { Menu, X, Home, Info, Briefcase, Mail, Package } from "lucide-react";
 import ThemeSwitcher from './ThemeSwitcher';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   
-  // State for the typewriter effect
   const words = ['Kabaadiwala', 'Mitra', 'Khaas'];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState('');
@@ -71,10 +69,9 @@ const Header = () => {
 
   return (
     <motion.nav
-      // The background color is now solid, not translucent
-      className={`fixed top-0 left-0 w-full px-4 py-4 z-50 transition-colors duration-300 bg-white dark:bg-gray-950
+      className={`fixed top-0 left-0 w-full px-4 py-4 z-50 transition-colors duration-300 bg-white dark:bg-[#1a1a2e]
         ${isScrolled
-          ? 'shadow-lg border-b border-gray-200 dark:border-gray-700'
+          ? 'shadow-lg border-b border-gray-200 dark:border-[#3a3a4c]'
           : 'shadow-none border-b border-transparent'
         }`}
       initial={{ y: -100 }}
@@ -88,8 +85,8 @@ const Header = () => {
             alt="Logo"
             className="rounded-full"
           />
-          <span className="font-bold text-2xl text-gray-800 dark:text-white font-poppins">
-            Aapla <span className="text-yellow-500 animate-pulse">{displayedText}</span>
+          <span className="font-bold text-2xl text-[#222222] dark:text-[#f0f0f0] font-poppins">
+            Aapla <span className="text-[#f39c12] animate-pulse">{displayedText}</span>
           </span>
         </Link>
         
@@ -98,19 +95,27 @@ const Header = () => {
             <Link
               key={index}
               to={link.path}
-              className="group text-lg relative flex items-center gap-2 text-gray-700 dark:text-gray-200 hover:text-green-600 dark:hover:text-green-400 transition-colors duration-200"
+              className="group text-lg relative flex items-center gap-2 text-[#666666] dark:text-[#a0a0a0] hover:text-[#2ecc71] transition-colors duration-200"
             >
               {link.icon}
               {link.name}
-              <span className="absolute left-0 -bottom-1 h-[2px] bg-green-600 dark:bg-green-400 transition-all duration-300 w-0 group-hover:w-full"></span>
+              <span className="absolute left-0 -bottom-1 h-[2px] bg-[#2ecc71] transition-all duration-300 w-0 group-hover:w-full"></span>
             </Link>
           ))}
           <ThemeSwitcher />
+          {/* New Book Pickup Button */}
+          <Link
+            to="/book-pickup"
+            className="ml-4 px-5 py-2 rounded-full bg-[#2ecc71] dark:bg-[#3498db] text-white font-semibold shadow-md hover:bg-[#27ae60] dark:hover:bg-[#2980b9] transition-colors flex items-center gap-2"
+          >
+            <Package size={18} />
+            Book Pickup
+          </Link>
         </div>
 
         <div className="md:hidden flex items-center gap-2">
           <ThemeSwitcher />
-          <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700 dark:text-gray-200 focus:outline-none">
+          <button onClick={() => setIsOpen(!isOpen)} className="text-[#222222] dark:text-[#f0f0f0] focus:outline-none">
             {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
@@ -118,7 +123,7 @@ const Header = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="md:hidden bg-white dark:bg-gray-950 mt-4 rounded-lg shadow-xl font-poppins"
+            className="md:hidden bg-white dark:bg-[#1a1a2e] mt-4 rounded-lg shadow-xl font-poppins"
             initial="hidden"
             animate="visible"
             exit="hidden"
@@ -129,7 +134,7 @@ const Header = () => {
                 <Link
                   key={index}
                   to={link.path}
-                  className="px-4 py-2 rounded-lg text-lg flex items-center gap-3 text-gray-800 dark:text-gray-100 hover:bg-green-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                  className="px-4 py-2 rounded-lg text-lg flex items-center gap-3 text-[#222222] dark:text-[#f0f0f0] hover:bg-[#2ecc71] hover:text-white transition-colors duration-200"
                   variants={linkVariants}
                   onClick={() => setIsOpen(false)}
                 >
@@ -137,6 +142,15 @@ const Header = () => {
                   {link.name}
                 </Link>
               ))}
+              {/* New mobile Book Pickup Button */}
+              <Link
+                to="/book-pickup"
+                className="px-4 py-2 mt-2 rounded-lg text-lg bg-[#2ecc71] dark:bg-[#3498db] text-white flex items-center gap-3 transition-colors duration-200 hover:bg-[#27ae60] dark:hover:bg-[#2980b9]"
+                onClick={() => setIsOpen(false)}
+              >
+                <Package size={20} />
+                Book Pickup
+              </Link>
             </div>
           </motion.div>
         )}
