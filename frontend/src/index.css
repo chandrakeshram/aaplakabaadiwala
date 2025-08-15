@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .glass {
+    @apply bg-white/20 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl;
+  }
+  .glass-dark {
+    @apply bg-slate-900/50 backdrop-blur-lg border border-white/10 shadow-xl rounded-2xl;
+  }
+  .neon-text {
+    text-shadow: 0 0 5px #4ade80, 0 0 10px #4ade80, 0 0 20px #22c55e;
+  }
+}
