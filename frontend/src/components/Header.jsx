@@ -18,11 +18,9 @@ const Header = () => {
   const deletingSpeed = 80;
   const delayBetweenWords = 1500;
 
-  // Typewriter effect logic
   useEffect(() => {
     const word = words[currentWordIndex];
     let timer;
-
     if (isDeleting) {
       if (displayedText.length > 0) {
         timer = setTimeout(() => {
@@ -43,11 +41,9 @@ const Header = () => {
         }, delayBetweenWords);
       }
     }
-
     return () => clearTimeout(timer);
   }, [displayedText, isDeleting, currentWordIndex]);
 
-  // Scroll effect for the header's glassmorphism
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -75,17 +71,17 @@ const Header = () => {
 
   return (
     <motion.nav
-      className={`fixed top-0 left-0 w-full px-4 py-4 z-50 transition-colors duration-300
+      // The background color is now solid, not translucent
+      className={`fixed top-0 left-0 w-full px-4 py-4 z-50 transition-colors duration-300 bg-white dark:bg-gray-950
         ${isScrolled
-          ? 'bg-white/30 dark:bg-gray-800/30 backdrop-blur-md shadow-lg border-b border-gray-200 dark:border-gray-700'
-          : 'bg-transparent border-b border-transparent'
+          ? 'shadow-lg border-b border-gray-200 dark:border-gray-700'
+          : 'shadow-none border-b border-transparent'
         }`}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <div className="flex justify-between items-center px-6">
-        {/* Logo and animated branding */}
         <Link to="/" className="flex items-center gap-2">
           <img
             src="https://placehold.co/40x40/000000/FFFFFF?text=Logo"
@@ -97,7 +93,6 @@ const Header = () => {
           </span>
         </Link>
         
-        {/* Desktop menu */}
         <div className="hidden md:flex items-center gap-8 font-poppins">
           {navLinks.map((link, index) => (
             <Link
@@ -113,7 +108,6 @@ const Header = () => {
           <ThemeSwitcher />
         </div>
 
-        {/* Mobile menu button */}
         <div className="md:hidden flex items-center gap-2">
           <ThemeSwitcher />
           <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700 dark:text-gray-200 focus:outline-none">
@@ -124,7 +118,7 @@ const Header = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="md:hidden bg-white/50 dark:bg-gray-800/50 backdrop-blur-md mt-4 rounded-lg shadow-xl font-poppins"
+            className="md:hidden bg-white dark:bg-gray-950 mt-4 rounded-lg shadow-xl font-poppins"
             initial="hidden"
             animate="visible"
             exit="hidden"
