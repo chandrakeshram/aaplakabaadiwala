@@ -1,5 +1,10 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+
+// import "swiper/css";
+// import "swiper/css/pagination";
 
 const galleryImages = [
   { src: "./assets/images/gal1.png", alt: "Scrap collection in progress" },
@@ -58,8 +63,35 @@ const GallerySection = () => {
         </motion.p>
       </div>
 
+      {/* Mobile: Swiper Carousel */}
+      <div className="block md:hidden">
+        <Swiper
+          modules={[Pagination]}
+          pagination={{ clickable: true }}
+          spaceBetween={20}
+          slidesPerView={1}
+          loop
+        >
+          {galleryImages.map((image, index) => (
+            <SwiperSlide key={index}>
+              <motion.div
+                className="relative rounded-2xl overflow-hidden shadow-xl transition-all duration-300 transform hover:scale-105"
+                variants={itemVariants}
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="w-full h-auto object-cover"
+                />
+              </motion.div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+
+      {/* Desktop: Grid */}
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         variants={containerVariants}
       >
         {galleryImages.map((image, index) => (
@@ -68,7 +100,11 @@ const GallerySection = () => {
             className="relative rounded-2xl overflow-hidden shadow-xl transition-all duration-300 transform hover:scale-105"
             variants={itemVariants}
           >
-            <img src={image.src} alt={image.alt} className="w-full h-auto object-cover" />
+            <img
+              src={image.src}
+              alt={image.alt}
+              className="w-full h-auto object-cover"
+            />
           </motion.div>
         ))}
       </motion.div>
