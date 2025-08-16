@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from "framer-motion";
 import Carousel from '../components/Carousel';
+import AboutSection from '../components/AboutSection';
+import ImpactSection from '../components/ImpactSection';
 
 const Home = () => {
   return (
@@ -9,12 +11,17 @@ const Home = () => {
       
       {/* This container has the padding for the rest of the content */}
       <div className="px-6 md:px-12 py-8">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-center mb-4">
+        <h1 className="text-5xl md:text-7xl font-extrabold text-center mb-4">
           Welcome to the Home Page
         </h1>
         <p className="text-xl text-center max-w-2xl mx-auto text-gray-700 dark:text-gray-300">
           This is the main content of your home page.
         </p>
+
+        <AboutSection />
+        
+        {/* The new Impact Section is placed here */}
+        <ImpactSection />
 
         {[...Array(10)].map((_, i) => (
           <motion.div
@@ -26,10 +33,10 @@ const Home = () => {
             viewport={{ once: true, amount: 0.2 }}
             whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
           >
-            <h2 className="text-3xl font-bold mb-3 text-[#2ecc71] dark:text-[#8dffb8]">
+            <h2 className="text-4xl font-bold mb-3 text-[#2ecc71] dark:text-[#8dffb8]">
               Section {i + 1}
             </h2>
-            <p className="text-[#444444] dark:text-[#a0a0a0] leading-relaxed">
+            <p className="text-xl text-[#444444] dark:text-[#a0a0a0] leading-relaxed">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
             </p>
           </motion.div>
