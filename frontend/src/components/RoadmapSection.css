@@ -1,0 +1,28 @@
+/* src/components/RoadmapSection.css */
+
+.roadmap-line {
+    background-image: linear-gradient(to bottom, #ccc 50%, transparent 50%);
+    background-size: 2px 20px;
+    animation: move-line-mobile 3s linear infinite;
+}
+
+@keyframes move-line-mobile {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 20px; }
+}
+
+.roadmap-line-desktop {
+    /* For a more complex, winding path, a background image or SVG would be needed. */
+    /* This is a simplified dashed line for the Canvas. */
+    background-image: linear-gradient(to right, #ccc 50%, transparent 50%);
+    background-size: 20px 2px;
+    animation: move-line-desktop 3s linear infinite;
+}
+
+@keyframes move-line-desktop {
+    0% { background-position: 0 0; }
+    100% { background-position: 20px 0; }
+}
+
+/* To get a true zigzag, you'd need a more complex SVG for the path, which is beyond simple CSS. */
+/* The layout above uses a fluid approach to create the zigzag appearance. */

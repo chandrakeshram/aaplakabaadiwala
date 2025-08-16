@@ -4,19 +4,25 @@ import Carousel from '../components/Carousel';
 import AboutSection from '../components/AboutSection';
 import ImpactSection from '../components/ImpactSection';
 import PresenceSection from '../components/PresenceSection';
+import RoadmapSection from '../components/RoadmapSection';
+import TestimonialSection from '../components/TestimonialSection';
+import GallerySection from '../components/GallerySection';
 
 const Home = () => {
   return (
     <>
       <Carousel />
       
-      {/* This container has the padding for the rest of the content */}
-      <div className="px-6 md:px-12 py-8">
+      {/* This container has the padding and full width for the rest of the content */}
+      <div className="px-6 w-full md:px-0 py-8">
+        
         <AboutSection />
         <PresenceSection/>
+        <RoadmapSection/>
         {/* The new Impact Section is placed here */}
         <ImpactSection />
-
+        <GallerySection/>
+        <TestimonialSection/>
         {[...Array(10)].map((_, i) => (
           <motion.div
             key={i}
