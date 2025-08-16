@@ -51,10 +51,10 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: "Home", path: "/", icon: <Home size={20} /> },
-    { name: "About", path: "/about", icon: <Info size={20} /> },
-    { name: "Services", path: "/services", icon: <Briefcase size={20} /> },
-    { name: "Contact", path: "/contact", icon: <Mail size={20} /> },
+    { name: "Home", path: "/", icon: <Home size={22} /> },
+    { name: "About", path: "/about", icon: <Info size={22} /> },
+    { name: "Services", path: "/services", icon: <Briefcase size={22} /> },
+    { name: "Contact", path: "/contact", icon: <Mail size={22} /> },
   ];
 
   const menuVariants = {
@@ -79,23 +79,25 @@ const Header = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <div className="flex justify-between items-center px-6">
+        {/* Logo + Typing Brand Name */}
         <Link to="/" className="flex items-center gap-2">
           <img
-            src="https://placehold.co/40x40/000000/FFFFFF?text=Logo"
+            src="https://placehold.co/48x48/000000/FFFFFF?text=Logo"
             alt="Logo"
             className="rounded-full"
           />
-          <span className="font-bold text-2xl text-[#222222] dark:text-[#f0f0f0] font-poppins">
+          <span className="font-bold text-2xl md:text-3xl lg:text-4xl text-[#222222] dark:text-[#f0f0f0] font-poppins">
             Aapla <span className="text-[#f39c12] animate-pulse">{displayedText}</span>
           </span>
         </Link>
         
-        <div className="hidden md:flex items-center gap-8 font-poppins">
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center gap-10 font-poppins">
           {navLinks.map((link, index) => (
             <Link
               key={index}
               to={link.path}
-              className="group text-lg relative flex items-center gap-2 text-[#666666] dark:text-[#a0a0a0] hover:text-[#2ecc71] transition-colors duration-200"
+              className="group text-xl md:text-2xl relative flex items-center gap-2 text-[#666666] dark:text-[#a0a0a0] hover:text-[#2ecc71] transition-colors duration-200"
             >
               {link.icon}
               {link.name}
@@ -103,23 +105,26 @@ const Header = () => {
             </Link>
           ))}
           <ThemeSwitcher />
-          {/* New Book Pickup Button */}
+          {/* Book Pickup Button */}
           <Link
             to="/book-pickup"
-            className="ml-4 px-5 py-2 rounded-full bg-[#2ecc71] dark:bg-[#3498db] text-white font-semibold shadow-md hover:bg-[#27ae60] dark:hover:bg-[#2980b9] transition-colors flex items-center gap-2"
+            className="ml-4 px-6 py-2 rounded-full text-lg md:text-xl bg-[#2ecc71] dark:bg-[#3498db] text-white font-semibold shadow-md hover:bg-[#27ae60] dark:hover:bg-[#2980b9] transition-colors flex items-center gap-2"
           >
-            <Package size={18} />
+            <Package size={22} />
             Book Pickup
           </Link>
         </div>
 
+        {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-2">
           <ThemeSwitcher />
           <button onClick={() => setIsOpen(!isOpen)} className="text-[#222222] dark:text-[#f0f0f0] focus:outline-none">
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
+            {isOpen ? <X size={30} /> : <Menu size={30} />}
           </button>
         </div>
       </div>
+
+      {/* Mobile Dropdown */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -129,26 +134,24 @@ const Header = () => {
             exit="hidden"
             variants={menuVariants}
           >
-            <div className="flex flex-col p-4 space-y-2">
+            <div className="flex flex-col p-4 space-y-3">
               {navLinks.map((link, index) => (
                 <Link
                   key={index}
                   to={link.path}
-                  className="px-4 py-2 rounded-lg text-lg flex items-center gap-3 text-[#222222] dark:text-[#f0f0f0] hover:bg-[#2ecc71] hover:text-white transition-colors duration-200"
-                  variants={linkVariants}
+                  className="px-4 py-2 rounded-lg text-xl flex items-center gap-3 text-[#222222] dark:text-[#f0f0f0] hover:bg-[#2ecc71] hover:text-white transition-colors duration-200"
                   onClick={() => setIsOpen(false)}
                 >
                   {link.icon}
                   {link.name}
                 </Link>
               ))}
-              {/* New mobile Book Pickup Button */}
               <Link
                 to="/book-pickup"
-                className="px-4 py-2 mt-2 rounded-lg text-lg bg-[#2ecc71] dark:bg-[#3498db] text-white flex items-center gap-3 transition-colors duration-200 hover:bg-[#27ae60] dark:hover:bg-[#2980b9]"
+                className="px-4 py-2 mt-2 rounded-lg text-xl bg-[#2ecc71] dark:bg-[#3498db] text-white flex items-center gap-3 transition-colors duration-200 hover:bg-[#27ae60] dark:hover:bg-[#2980b9]"
                 onClick={() => setIsOpen(false)}
               >
-                <Package size={20} />
+                <Package size={22} />
                 Book Pickup
               </Link>
             </div>

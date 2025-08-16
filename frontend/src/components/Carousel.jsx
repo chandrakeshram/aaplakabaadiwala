@@ -24,24 +24,16 @@ const slides = [
   },
 ];
 
-// Variants for a smooth cross-fade animation
+// Variants for smooth cross-fade animation
 const fadeVariants = {
-  enter: {
-    opacity: 0,
-  },
+  enter: { opacity: 0 },
   center: {
     opacity: 1,
-    transition: {
-      duration: 1.5, // Changed to a slower duration for a more professional fade
-      ease: "easeOut"
-    },
+    transition: { duration: 1.5, ease: "easeOut" },
   },
   exit: {
     opacity: 0,
-    transition: {
-      duration: 1.5, // Changed to a slower duration for a more professional fade
-      ease: "easeOut"
-    },
+    transition: { duration: 1.5, ease: "easeOut" },
   },
 };
 
@@ -49,10 +41,7 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.5,
-    },
+    transition: { staggerChildren: 0.2, delayChildren: 0.5 },
   },
 };
 
@@ -61,11 +50,7 @@ const textVariants = {
   visible: {
     y: 0,
     opacity: 1,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 20,
-    },
+    transition: { type: "spring", stiffness: 100, damping: 20 },
   },
 };
 
@@ -76,7 +61,7 @@ export default function Carousel() {
   useEffect(() => {
     const timer = setInterval(() => {
       nextSlide();
-    }, 5000); // Changed to a longer interval to match the slower animation
+    }, 6000); // longer interval for readability
     return () => clearInterval(timer);
   }, [current]);
 
@@ -98,7 +83,7 @@ export default function Carousel() {
             <img
               src={slides[current].src}
               alt={slides[current].title}
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-cover"
             />
           ) : (
             <video
@@ -106,12 +91,14 @@ export default function Carousel() {
               autoPlay
               loop
               muted
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-cover"
             />
           )}
 
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm rounded-lg"></div>
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
 
+          {/* Text Content */}
           <motion.div
             className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10"
             variants={containerVariants}
@@ -120,23 +107,25 @@ export default function Carousel() {
           >
             <motion.h2
               variants={textVariants}
-              className="text-5xl md:text-6xl font-bold text-white drop-shadow-lg"
-              style={{ textShadow: "0 0 5px #000, 0 0 10px #000" }}
+              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold text-white drop-shadow-xl"
+              style={{ textShadow: "0 0 5px #000, 0 0 15px #000" }}
             >
               {slides[current].title}
             </motion.h2>
+
             <motion.p
               variants={textVariants}
-              className="mt-4 text-lg md:text-xl text-gray-200 max-w-3xl"
+              className="mt-4 text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-200 max-w-4xl"
             >
               {slides[current].message}
             </motion.p>
+
             <motion.div variants={textVariants}>
               <Link
                 to="/book-pickup"
-                className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg shadow-lg hover:bg-green-700 transition"
+                className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white text-lg md:text-xl rounded-lg shadow-lg hover:bg-green-700 transition"
               >
-                <Truck size={20} />
+                <Truck size={24} />
                 <span>Book a Pickup</span>
               </Link>
             </motion.div>
@@ -144,17 +133,18 @@ export default function Carousel() {
         </motion.div>
       </AnimatePresence>
 
+      {/* Navigation Buttons */}
       <button
         onClick={prevSlide}
         className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/30 p-3 rounded-full text-white hover:bg-white/50 transition z-20 backdrop-blur-sm"
       >
-        <ChevronLeft size={24} />
+        <ChevronLeft size={28} />
       </button>
       <button
         onClick={nextSlide}
         className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/30 p-3 rounded-full text-white hover:bg-white/50 transition z-20 backdrop-blur-sm"
       >
-        <ChevronRight size={24} />
+        <ChevronRight size={28} />
       </button>
     </div>
   );

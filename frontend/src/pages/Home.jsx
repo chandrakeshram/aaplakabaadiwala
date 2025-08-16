@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Carousel from '../components/Carousel';
 import AboutSection from '../components/AboutSection';
 import ImpactSection from '../components/ImpactSection';
+import PresenceSection from '../components/PresenceSection';
 
 const Home = () => {
   return (
@@ -11,15 +12,8 @@ const Home = () => {
       
       {/* This container has the padding for the rest of the content */}
       <div className="px-6 md:px-12 py-8">
-        <h1 className="text-5xl md:text-7xl font-extrabold text-center mb-4">
-          Welcome to the Home Page
-        </h1>
-        <p className="text-xl text-center max-w-2xl mx-auto text-gray-700 dark:text-gray-300">
-          This is the main content of your home page.
-        </p>
-
         <AboutSection />
-        
+        <PresenceSection/>
         {/* The new Impact Section is placed here */}
         <ImpactSection />
 
