@@ -32,7 +32,7 @@ export default function App() {
                 <Route path="/register" element={<Register />} />
                 {/* Protected Routes */}
                 <Route element={<PrivateRoute />}>
-                  <Route path="/book-pickup" element={<BookPickup />} />
+                  <Route path="/bookpickup" element={<BookPickup />} />
                   <Route path="/admin" element={<AdminPanel />} />
                 </Route>
               </Routes>
