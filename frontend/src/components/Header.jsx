@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from 'react-router-dom';
-import { Menu, X, Home, Info, Briefcase, Mail, Package } from "lucide-react";
+import { Menu, X, Home, Info, Briefcase, Mail, Package, LogIn, LogOut } from "lucide-react";
 import ThemeSwitcher from './ThemeSwitcher';
+import { useAuth } from '../context/AuthContext';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user, logout, isAdmin } = useAuth();
   
   const words = ['Kabaadiwala', 'Mitra', 'Khaas'];
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -40,7 +42,7 @@ const Header = () => {
       }
     }
     return () => clearTimeout(timer);
-  }, [displayedText, isDeleting, currentWordIndex]);
+  }, [displayedText, isDeleting, currentWordIndex, words]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,10 +53,10 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: "Home", path: "/", icon: <Home size={22} /> },
-    { name: "About", path: "/about", icon: <Info size={22} /> },
-    { name: "Services", path: "/services", icon: <Briefcase size={22} /> },
-    { name: "Contact", path: "/contact", icon: <Mail size={22} /> },
+    { name: "Home", path: "/", icon: <Home size={20} /> },
+    { name: "About", path: "/about", icon: <Info size={20} /> },
+    { name: "Services", path: "/services", icon: <Briefcase size={20} /> },
+    { name: "Contact", path: "/contact", icon: <Mail size={20} /> },
   ];
 
   const menuVariants = {
@@ -79,25 +81,23 @@ const Header = () => {
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       <div className="flex justify-between items-center px-6">
-        {/* Logo + Typing Brand Name */}
         <Link to="/" className="flex items-center gap-2">
           <img
-            src="https://placehold.co/48x48/000000/FFFFFF?text=Logo"
+            src="https://placehold.co/40x40/000000/FFFFFF?text=Logo"
             alt="Logo"
             className="rounded-full"
           />
-          <span className="font-bold text-2xl md:text-3xl lg:text-4xl text-[#222222] dark:text-[#f0f0f0] font-poppins">
+          <span className="font-bold text-3xl text-[#222222] dark:text-[#f0f0f0] font-poppins">
             Aapla <span className="text-[#f39c12] animate-pulse">{displayedText}</span>
           </span>
         </Link>
         
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-10 font-poppins">
+        <div className="hidden md:flex items-center gap-8 font-poppins">
           {navLinks.map((link, index) => (
             <Link
               key={index}
               to={link.path}
-              className="group text-xl md:text-2xl relative flex items-center gap-2 text-[#666666] dark:text-[#a0a0a0] hover:text-[#2ecc71] transition-colors duration-200"
+              className="group text-xl relative flex items-center gap-2 text-[#666666] dark:text-[#a0a0a0] hover:text-[#2ecc71] transition-colors duration-200"
             >
               {link.icon}
               {link.name}
@@ -105,26 +105,37 @@ const Header = () => {
             </Link>
           ))}
           <ThemeSwitcher />
-          {/* Book Pickup Button */}
-          <Link
-            to="/book-pickup"
-            className="ml-4 px-6 py-2 rounded-full text-lg md:text-xl bg-[#2ecc71] dark:bg-[#3498db] text-white font-semibold shadow-md hover:bg-[#27ae60] dark:hover:bg-[#2980b9] transition-colors flex items-center gap-2"
-          >
-            <Package size={22} />
-            Book Pickup
-          </Link>
+          {user ? (
+            <>
+              {isAdmin && (
+                <Link to="/admin" className="ml-4 px-5 py-2 rounded-full bg-gray-500 text-white font-semibold shadow-md hover:bg-gray-600 transition-colors flex items-center gap-2">
+                  Admin
+                </Link>
+              )}
+              <motion.button
+                onClick={() => { logout(); setIsOpen(false); }}
+                className="ml-4 px-5 py-2 rounded-full bg-[#e74c3c] dark:bg-[#c0392b] text-white font-semibold shadow-md hover:bg-[#c0392b] transition-colors flex items-center gap-2"
+              >
+                <LogOut size={18} /> Logout
+              </motion.button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              className="ml-4 px-5 py-2 rounded-full bg-[#2ecc71] dark:bg-[#3498db] text-white font-semibold shadow-md hover:bg-[#27ae60] dark:hover:bg-[#2980b9] transition-colors flex items-center gap-2"
+            >
+              <LogIn size={18} /> Login
+            </Link>
+          )}
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center gap-2">
           <ThemeSwitcher />
           <button onClick={() => setIsOpen(!isOpen)} className="text-[#222222] dark:text-[#f0f0f0] focus:outline-none">
-            {isOpen ? <X size={30} /> : <Menu size={30} />}
+            {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
       </div>
-
-      {/* Mobile Dropdown */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -134,26 +145,35 @@ const Header = () => {
             exit="hidden"
             variants={menuVariants}
           >
-            <div className="flex flex-col p-4 space-y-3">
+            <div className="flex flex-col p-4 space-y-2">
               {navLinks.map((link, index) => (
                 <Link
                   key={index}
                   to={link.path}
                   className="px-4 py-2 rounded-lg text-xl flex items-center gap-3 text-[#222222] dark:text-[#f0f0f0] hover:bg-[#2ecc71] hover:text-white transition-colors duration-200"
+                  variants={linkVariants}
                   onClick={() => setIsOpen(false)}
                 >
                   {link.icon}
                   {link.name}
                 </Link>
               ))}
-              <Link
-                to="/book-pickup"
-                className="px-4 py-2 mt-2 rounded-lg text-xl bg-[#2ecc71] dark:bg-[#3498db] text-white flex items-center gap-3 transition-colors duration-200 hover:bg-[#27ae60] dark:hover:bg-[#2980b9]"
-                onClick={() => setIsOpen(false)}
-              >
-                <Package size={22} />
-                Book Pickup
-              </Link>
+              {user ? (
+                <>
+                  {isAdmin && (
+                    <Link to="/admin" className="px-4 py-2 rounded-lg text-xl bg-gray-500 text-white flex items-center gap-3 transition-colors duration-200 hover:bg-gray-600" onClick={() => setIsOpen(false)}>
+                      Admin
+                    </Link>
+                  )}
+                  <motion.button onClick={() => { logout(); setIsOpen(false); }} className="px-4 py-2 mt-2 rounded-lg text-lg bg-[#e74c3c] dark:bg-[#c0392b] text-white flex items-center gap-3 transition-colors duration-200 hover:bg-[#c0392b]">
+                    <LogOut size={20} /> Logout
+                  </motion.button>
+                </>
+              ) : (
+                <Link to="/login" className="px-4 py-2 mt-2 rounded-lg text-lg bg-[#2ecc71] dark:bg-[#3498db] text-white flex items-center gap-3 transition-colors duration-200 hover:bg-[#27ae60] dark:hover:bg-[#2980b9]" onClick={() => setIsOpen(false)}>
+                  <LogIn size={20} /> Login
+                </Link>
+              )}
             </div>
           </motion.div>
         )}

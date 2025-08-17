@@ -1,11 +1,37 @@
+// backend/models/Pickup.js
 import mongoose from 'mongoose';
 
 const pickupSchema = new mongoose.Schema({
-  address: String,
-  pincode: String,
-  scrapItems: [String],
-  date: { type: Date, default: Date.now },
-  status: { type: String, default: "Pending" }
+  name: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: String,
+    required: true,
+  },
+  time: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ['Pending', 'Completed', 'Cancelled'],
+    default: 'Pending',
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
-export default mongoose.model('Pickup', pickupSchema);
+const Pickup = mongoose.model('Pickup', pickupSchema);
+export default Pickup;

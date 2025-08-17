@@ -1,6 +1,5 @@
-// src/App.jsx
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './pages/Home';
 // import About from './pages/About'; 
@@ -8,30 +7,40 @@ import Home from './pages/Home';
 // import Contact from './pages/Contact'; 
 import AnimatedBackground from './components/AnimatedBackground';
 import Footer from './components/Footer';
-
+import BookPickup from './pages/Pickup';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import AdminPanel from './pages/AdminPanel'; // Import the AdminPanel
+import { AuthProvider } from './context/AuthContext'; // Import the AuthProvider
+import PrivateRoute from './components/PrivateRoute';
 export default function App() {
   return (
-    <div className="min-h-screen font-sans">
-      <Header />
-      
-      {/* This main container holds all your page content and the background */}
-      {/* Its position is set to relative, which is a key part of the fix */}
-      <main className="relative w-full -mt-10 pt-24  min-h-screen text-gray-900 dark:text-white transition-colors duration-300">
-        
-        {/* The background is placed here and will only fill the <main> tag */}
-        <AnimatedBackground />
-
-        {/* The routes and content must be placed above the background */}
-        <div className="relative z-10">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            {/* <Route path="/about" element={<About />} />
-            <Route path="/services" element={<Services />} />
-            <Route path="/contact" element={<Contact />} /> */}
-          </Routes>
+    // <Router>
+      <AuthProvider>
+        <div className="min-h-screen font-sans flex flex-col">
+          <Header />
+          <main className="relative flex-grow pt-24 min-h-screen bg-[#f4f4f4] dark:bg-[#1a1a2e] text-[#222222] dark:text-[#e0e0e0] transition-colors duration-300">
+            <AnimatedBackground />
+            <div className="relative z-10">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                {/* <Route path="/about" element={<About />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/contact" element={<Contact />} /> */}
+                <Route path="/book-pickup" element={<BookPickup />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                {/* Protected Routes */}
+                <Route element={<PrivateRoute />}>
+                  <Route path="/book-pickup" element={<BookPickup />} />
+                  <Route path="/admin" element={<AdminPanel />} />
+                </Route>
+              </Routes>
+            </div>
+          </main>
+          <Footer/>
         </div>
-        <Footer/>
-      </main>
-    </div>
+      </AuthProvider>
+    // </Router>
   );
 }
