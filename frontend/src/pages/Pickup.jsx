@@ -1,64 +1,61 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Loader2, CheckCircle2, XCircle, Trash2 } from "lucide-react";
-const pickupurl = "http://localhost:5001/api/pickupRoutes";
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+
+// The main BookPickup component
 export default function BookPickup() {
-  const [form, setForm] = useState({ name: "", address: "", phone: "", date: "", time: "" });
+  const { user } = useAuth();
+  const [form, setForm] = useState({ name: '', address: '', phone: '', date: '', time: '' });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-  const [pickups, setPickups] = useState([]);
-  const [fetchLoading, setFetchLoading] = useState(true);
 
-  const fetchPickups = async () => {
-    try {
-      const response = await fetch(pickupurl);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to fetch pickups.");
-      }
-      const data = await response.json();
-      setPickups(data.pickups || []);
-    } catch (error) {
-      console.error(error);
-      setMessage({ text: error.message || "Error fetching pickups.", type: "error" });
-    } finally {
-      setFetchLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPickups();
-    const interval = setInterval(fetchPickups, 10000); // refresh every 10s
-    return () => clearInterval(interval);
-  }, []);
-
+  // Function to handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm(prevForm => ({ ...prevForm, [name]: value }));
   };
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
+
+    // Ensure a user is logged in before submitting
+    if (!user) {
+      setMessage({ text: 'You must be logged in to schedule a pickup.', type: 'error' });
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch(pickupurl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, createdAt: new Date().toISOString(), status: "Pending" }),
+      // API call to your backend to create a new pickup
+      // The fetch URL is now a relative path that starts with /api
+      const response = await fetch('/api/pickupRoutes/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // Send the user's JWT
+        },
+        body: JSON.stringify({
+          ...form,
+          userId: user.id,
+          userName: user.name,
+          status: 'Pending'
+        }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to book pickup.");
+        throw new Error(errorData.message || 'Failed to book pickup.');
       }
 
-      setMessage({ text: "Pickup booked successfully!", type: "success" });
-      setForm({ name: "", address: "", phone: "", date: "", time: "" });
-      fetchPickups();
+      setMessage({ text: 'Pickup booked successfully!', type: 'success' });
+      setForm({ name: '', address: '', phone: '', date: '', time: '' });
     } catch (error) {
-      console.error(error);
-      setMessage({ text: error.message || "Error booking pickup. Please try again.", type: "error" });
+      console.error("Error booking pickup: ", error);
+      setMessage({ text: error.message || 'Error booking pickup. Please try again.', type: 'error' });
     } finally {
       setLoading(false);
     }
@@ -66,13 +63,13 @@ export default function BookPickup() {
 
   return (
     <motion.div
-      className="container mx-auto px-4 md:px-12 py-16 md:py-28"
+      className="container mx-auto px-6 py-20 md:py-28"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
       <div className="text-center mb-12 md:mb-16">
-        <h1 className="text-4xl md:text-5xl font-bold text-[#2ecc71] dark:text-[#8dffb8]">
+        <h1 className="text-5xl md:text-6xl font-bold leading-tight text-[#2ecc71] dark:text-[#8dffb8]">
           Schedule a Scrap Pickup
         </h1>
         <p className="mt-4 text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
@@ -80,167 +77,56 @@ export default function BookPickup() {
         </p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-12">
-        {/* Form */}
+      <div className="flex justify-center">
         <motion.div
-          className="flex-1 p-8 rounded-2xl shadow-xl bg-white dark:bg-[#2b2b3b]"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
+          className="flex-1 p-8 rounded-2xl shadow-xl bg-white dark:bg-[#2b2b3b] max-w-2xl"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name */}
             <div>
-              <label className="block mb-2 text-lg font-medium text-gray-700 dark:text-gray-300">
-                Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Enter your full name"
-                required
-                className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#1a1a2e] text-gray-900 dark:text-gray-100 text-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2ecc71] dark:focus:ring-[#8dffb8] transition-all"
-              />
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Name</label>
+              <input type="text" id="name" name="name" value={form.name} onChange={handleChange} required
+                className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#1a1a2e] text-lg text-gray-900 dark:text-gray-100" />
             </div>
-
-            {/* Address */}
             <div>
-              <label className="block mb-2 text-lg font-medium text-gray-700 dark:text-gray-300">
-                Address
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={form.address}
-                onChange={handleChange}
-                placeholder="Enter your address"
-                required
-                className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#1a1a2e] text-gray-900 dark:text-gray-100 text-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2ecc71] dark:focus:ring-[#8dffb8] transition-all"
-              />
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Address</label>
+              <input type="text" id="address" name="address" value={form.address} onChange={handleChange} required
+                className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#1a1a2e] text-lg text-gray-900 dark:text-gray-100" />
             </div>
-
-            {/* Phone */}
             <div>
-              <label className="block mb-2 text-lg font-medium text-gray-700 dark:text-gray-300">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                placeholder="Enter your phone number"
-                required
-                className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#1a1a2e] text-gray-900 dark:text-gray-100 text-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2ecc71] dark:focus:ring-[#8dffb8] transition-all"
-              />
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
+              <input type="tel" id="phone" name="phone" value={form.phone} onChange={handleChange} required
+                className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#1a1a2e] text-lg text-gray-900 dark:text-gray-100" />
             </div>
-
-            {/* Date and Time */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block mb-2 text-lg font-medium text-gray-700 dark:text-gray-300">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  name="date"
-                  value={form.date}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#1a1a2e] text-gray-900 dark:text-gray-100 text-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2ecc71] dark:focus:ring-[#8dffb8] transition-all"
-                />
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <label htmlFor="date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date</label>
+                <input type="date" id="date" name="date" value={form.date} onChange={handleChange} required
+                  className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#1a1a2e] text-lg text-gray-900 dark:text-gray-100" />
               </div>
-              <div>
-                <label className="block mb-2 text-lg font-medium text-gray-700 dark:text-gray-300">
-                  Time
-                </label>
-                <input
-                  type="time"
-                  name="time"
-                  value={form.time}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#1a1a2e] text-gray-900 dark:text-gray-100 text-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#2ecc71] dark:focus:ring-[#8dffb8] transition-all"
-                />
+              <div className="flex-1">
+                <label htmlFor="time" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Time</label>
+                <input type="time" id="time" name="time" value={form.time} onChange={handleChange} required
+                  className="w-full px-4 py-3 rounded-lg bg-gray-50 dark:bg-[#1a1a2e] text-lg text-gray-900 dark:text-gray-100" />
               </div>
             </div>
-
-            {/* Message */}
             {message && (
-              <div
-                className={`p-4 rounded-lg flex items-center gap-2 text-white font-semibold ${
-                  message.type === "success" ? "bg-green-500" : "bg-red-500"
-                }`}
-              >
-                {message.type === "success" ? <CheckCircle2 size={20} /> : <XCircle size={20} />}
+              <div className={`p-4 rounded-lg text-white font-semibold flex items-center gap-2 ${message.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
+                {message.type === 'success' ? <CheckCircle2 size={20} /> : <XCircle size={20} />}
                 <span>{message.text}</span>
               </div>
             )}
-
-            {/* Submit */}
-            <motion.button
-              type="submit"
-              disabled={loading}
-              className="w-full px-6 py-3 rounded-lg bg-[#2ecc71] dark:bg-[#3498db] text-white font-semibold flex items-center justify-center gap-2 text-lg disabled:opacity-50 transition-all hover:scale-105"
+            <motion.button type="submit" disabled={loading}
+              className="w-full px-6 py-3 rounded-lg bg-[#2ecc71] dark:bg-[#3498db] text-white font-semibold transition-colors disabled:opacity-50 flex items-center justify-center gap-2 text-lg"
               whileHover={{ scale: loading ? 1 : 1.02 }}
               whileTap={{ scale: loading ? 1 : 0.98 }}
             >
               {loading ? <Loader2 className="animate-spin" size={24} /> : null}
-              {loading ? "Booking..." : "Book Pickup"}
+              {loading ? 'Booking...' : 'Book Pickup'}
             </motion.button>
           </form>
-        </motion.div>
-
-        {/* Past Pickups */}
-        <motion.div
-          className="flex-1 p-8 rounded-2xl shadow-xl bg-white dark:bg-[#2b2b3b]"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <h2 className="text-2xl font-bold mb-4 text-[#2ecc71] dark:text-[#8dffb8]">
-            Your Recent Pickups
-          </h2>
-          <div className="space-y-4">
-            {fetchLoading ? (
-              <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-                <Loader2 className="animate-spin" size={20} /> Loading pickups...
-              </div>
-            ) : pickups.length > 0 ? (
-              pickups.map((pickup) => (
-                <motion.div
-                  key={pickup._id || pickup.id}
-                  className="p-4 rounded-lg bg-gray-100 dark:bg-[#1a1a2e] flex flex-col sm:flex-row justify-between items-center text-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <div className="flex-1">
-                    <p className="font-semibold">
-                      {pickup.date} at {pickup.time}
-                    </p>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      Status:{" "}
-                      <span
-                        className={
-                          pickup.status === "Pending"
-                            ? "text-yellow-600"
-                            : "text-green-600"
-                        }
-                      >
-                        {pickup.status}
-                      </span>
-                    </p>
-                  </div>
-                  <button className="mt-2 sm:mt-0 text-red-500 hover:text-red-700 transition-colors">
-                    <Trash2 size={24} />
-                  </button>
-                </motion.div>
-              ))
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400">No pickups booked yet.</p>
-            )}
-          </div>
         </motion.div>
       </div>
     </motion.div>

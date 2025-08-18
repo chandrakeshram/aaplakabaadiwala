@@ -2,7 +2,12 @@
 import mongoose from 'mongoose';
 
 const pickupSchema = new mongoose.Schema({
-  name: {
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User',
+  },
+  userName: {
     type: String,
     required: true,
   },
@@ -24,7 +29,7 @@ const pickupSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Pending', 'Completed', 'Cancelled'],
+    enum: ['Pending', 'Completed', 'Rejected'],
     default: 'Pending',
   },
   createdAt: {

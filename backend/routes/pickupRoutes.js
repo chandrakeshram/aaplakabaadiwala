@@ -1,13 +1,16 @@
 // backend/routes/pickupRoutes.js
 import express from 'express';
-import { getPickups, createPickup } from '../controllers/pickupController.js'; // Note the .js extension
+import { getPickups, createPickup, updatePickupStatus, deletePickup } from '../controllers/pickupController.js';
+import { protect, admin } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-// GET request to fetch all pickups
-router.get('/', getPickups);
+// Route for a normal user to create a pickup (protected)
+router.post('/create', protect, createPickup);
 
-// POST request to create a new pickup
-router.post('/', createPickup);
+// Routes for admin to manage pickups (protected by admin middleware)
+router.get('/', protect, admin, getPickups);
+router.put('/:id/status', protect, admin, updatePickupStatus);
+router.delete('/:id', protect, admin, deletePickup);
 
-export default router; // This is the default export your server is looking for
+export default router;
