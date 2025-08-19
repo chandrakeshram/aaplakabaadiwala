@@ -32,7 +32,7 @@ export default function BookPickup() {
     try {
       // API call to your backend to create a new pickup
       // The fetch URL is now a relative path that starts with /api
-      const response = await fetch('/api/pickupRoutes/create', {
+      const response = await fetch('/api/pickups/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
