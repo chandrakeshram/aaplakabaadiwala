@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb+srv://chandrakeshram31:6R0011
 // Public routes
 app.use('/api/auth', authRoutes);
 // Protected routes
-app.use('/api/pickupRoutes', protect, pickupRoutes);
+app.use('/api/pickups', protect, pickupRoutes);
 app.use('/api/admin', protect, admin, adminRoutes);
 
 app.listen(PORT, () => {
