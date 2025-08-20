@@ -1,26 +1,45 @@
-// backend/controllers/pickupController.js
 import Pickup from '../models/Pickup.js';
 import axios from "axios";
 
 // WhatsApp Cloud API credentials (store in .env file)
 const WHATSAPP_API_URL = "https://graph.facebook.com/v21.0";
-const PHONE_NUMBER_ID = "684957801376808"; 
-const ACCESS_TOKEN = "EAARlCwPtX00BPHBfTZADg2zEKbb2PYjTsS5hjO5VJGacnejnSussHMPOZBaDQsgCLM955Ng71bniPlMICRqGvra1wcdQYCsRUTQMhbHQgBG96OEroS5i9sb9Ny3BpElNauOHdPzWV9lTxIcZBWwbTfqNZBTdt8CxAm03fqGyealYzGTQUJb9wWE3AchdNnMp1qYfOnfzZBnE9c13ZCwmYiuqxwqOJZCxA2CHHUTs5mtkQZDZD";
-const phone_no = '917875843473';
+const WHATSAPP_ACCESS_TOKEN="EAARlCwPtX00BPFDAIq5NKnQ9ZBY5wSyqZASZAPsDjE2eBPAlT01fjIaxpEnrYaM95jaxoGsTjXfqChvF00KWGrBJ7eLeLSZBBQgb88FucbKXvZClTYgVt4ijlZCVine7XcDb6xn4aiH47ZAY3Edr5P3Nxi9XNEfuIIKUrK6o88eIiXSbiI6BjgZCzCJhzal7lx35tBDkrGI10KE5fGM5gplC4oL4Q5O7fkdHAZBzwc7pKs7UZD"
+const WHATSAPP_PHONE_NUMBER_ID="684957801376808"
+const OWNER_PHONE_NUMBER="917875843473"
+const PHONE_NUMBER_ID = WHATSAPP_PHONE_NUMBER_ID; 
+const ACCESS_TOKEN = WHATSAPP_ACCESS_TOKEN;
+const phone_no = OWNER_PHONE_NUMBER;
+
 /**
- * Send a WhatsApp message using Meta's Cloud API
+ * Send a WhatsApp message using Meta's Cloud APIs
  * @param {string} to - Recipient's phone number in international format (e.g., "91XXXXXXXXXX")
- * @param {string} message - Message content
+ * @param {string} templateName - Name of the template to use
+ * @param {object} templateData - Dynamic data for the template placeholders
  */
-const sendWhatsappNotification = async (to, message) => {
+const sendWhatsappNotification = async (to, templateName, templateData) => {
   try {
+    console.log(templateData);
     const response = await axios.post(
       `${WHATSAPP_API_URL}/${PHONE_NUMBER_ID}/messages`,
       {
         messaging_product: "whatsapp",
-        to:to,
-        type: "text",
-        text: { body: message },
+        to : "917875843473",
+        type: "template",
+        template: {
+          name: 'mytemplate',
+          language: { code: "en" },
+          components: [
+            {
+              type: "body",
+              parameters: [
+                { type: "text", text: templateData.customer_name }, // {{1}}
+                { type: "text", text: templateData.address },       // {{2}}
+                { type: "text", text: templateData.phone },         // {{3}}
+                { type: "text", text: templateData.date },          // {{4}}
+              ],
+            },
+          ],
+        },
       },
       {
         headers: {
@@ -42,7 +61,7 @@ const sendWhatsappNotification = async (to, message) => {
 // Create a new pickup
 export const createPickup = async (req, res) => {
   try {
-    const { userId, userName, address, phone, date, time } = req.body;
+    const { userId, userName, address, phone, date } = req.body;
 
     const newPickup = new Pickup({
       userId,
@@ -50,15 +69,19 @@ export const createPickup = async (req, res) => {
       address,
       phone,
       date,
-      time,
     });
     await newPickup.save();
 
-    // Format WhatsApp message
-    const message = `*New Scrap Pickup Request!*\n\n👤 User: ${userName}\n📍 Address: ${address}\n📞 Phone: ${phone}\n📅 Date: ${date} at ${time}\n📦 Status: ${newPickup.status}`;
+    // Template-specific data for the WhatsApp message
+    const templateData = {
+      customer_name: userName,
+      address:address,
+      phone :phone,
+      date:date,
+    };
 
-    // Send WhatsApp notification to entered phone number
-    await sendWhatsappNotification(phone_no, message);
+    // Send WhatsApp notification using the template
+    await sendWhatsappNotification(phone_no, "mytemplate", templateData);
 
     res
       .status(201)

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './pages/Home';
 // import About from './pages/About'; 
-// import Services from './pages/Services'; 
+import Rates from './pages/Rates'; 
 // import Contact from './pages/Contact'; 
 import AnimatedBackground from './components/AnimatedBackground';
 import Footer from './components/Footer';
@@ -32,6 +32,7 @@ export default function App() {
                 <Route path="/register" element={<Register />} />
                 {/* Protected Routes */}
                 <Route element={<PrivateRoute />}>
+                    <Route path="/rates" element={<Rates />} />
                   <Route path="/bookpickup" element={<BookPickup />} />
                   <Route path="/admin" element={<AdminPanel />} />
                 </Route>
