@@ -1,13 +1,16 @@
-import express from 'express';
-import { getRatesByPincode, updateRate } from '../controllers/ratesController.js';
-import { protect } from '../middlewares/auth.js'; // only protect, no admin
+// backend/routes/rates.js
+import express from "express";
+import { getRates, addRate, updateRate, deleteRate } from "../controllers/ratesController.js";
+import { protect, admin } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-// GET /api/rates?pincode=XXXXX
-router.get('/', protect, getRatesByPincode);
+// All logged-in users can view
+router.get("/", protect, getRates);
 
-// PUT /api/rates - optional, admin only if needed
-// router.put('/', protect, updateRate);
+// Only admins can manage
+router.post("/", protect, admin, addRate);
+router.put("/:id", protect, admin, updateRate);
+router.delete("/:id", protect, admin, deleteRate);
 
 export default router;

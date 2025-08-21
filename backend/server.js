@@ -7,6 +7,9 @@ import pickupRoutes from './routes/pickupRoutes.js';
 import adminRoutes from './routes/admin.js';
 import { protect, admin } from './middlewares/auth.js';
 import ratesRoutes from './routes/rates.js';
+import zonesRouter from "./routes/zones.js";
+
+
 
 dotenv.config();
 const app = express();
@@ -25,6 +28,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/pickups', protect, pickupRoutes);
 app.use('/api/admin', protect, admin, adminRoutes);
 app.use('/api/rates', protect,ratesRoutes); 
+app.use("/api/zones", zonesRouter);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

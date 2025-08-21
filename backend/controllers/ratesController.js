@@ -1,43 +1,52 @@
-import Zone from '../models/Zone.js';
 import Rate from '../models/Rate.js';
 
-// GET rates by pincode
-export const getRatesByPincode = async (req, res) => {
+// Get all rates
+export const getRates = async (req, res) => {
   try {
-    const { pincode } = req.query;
-
-    if (!pincode) return res.status(400).json({ message: "Pincode is required" });
-
-    const zone = await Zone.findOne({ pincode });
-    if (!zone) return res.status(404).json({ message: "No zone found for this pincode" });
-
-    const rates = await Rate.find({ zone: zone._id });
-
-    res.json({ zone: zone.name, rates });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const rates = await Rate.find().sort({ lastUpdated: -1 });
+    res.json({rates});
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching rates", error });
   }
 };
 
-// PUT update rate
-export const updateRate = async (req, res) => {
+// Add a new rate
+// Add a new rate
+export const addRate = async (req, res) => {
   try {
-    const { rateId, rate } = req.body;
+    const { material, rate, district } = req.body; // ⬅️ Change 'rate' to 'price'
 
-    if (!rateId || rate === undefined) {
-      return res.status(400).json({ message: "rateId and rate are required" });
+    if (!material || !rate || !district) {
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    const updatedRate = await Rate.findByIdAndUpdate(
-      rateId,
-      { rate, lastUpdated: Date.now() },
-      { new: true }
-    );
+    // ⬅️ Make sure the new Rate object uses 'price'
+    const newRate = new Rate({ material, rate, district });
+    await newRate.save();
+    res.status(201).json(newRate);
+  } catch (error) {
+    res.status(500).json({ message: "Error adding rate", error });
+  }
+};
 
-    if (!updatedRate) return res.status(404).json({ message: "Rate not found" });
+// Update a rate
+export const updateRate = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updated = await Rate.findByIdAndUpdate(id, req.body, { new: true });
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating rate", error });
+  }
+};
 
-    res.json(updatedRate);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+// Delete a rate
+export const deleteRate = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Rate.findByIdAndDelete(id);
+    res.json({ message: "Rate deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting rate", error });
   }
 };
