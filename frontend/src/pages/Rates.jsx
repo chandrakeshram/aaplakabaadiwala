@@ -40,7 +40,7 @@ export default function Rates() {
     district: "",
   });
 
-  const API_URL = "/api/rates";
+  const API_URL = `${API_BASE_URL}/api/rates`;
 
   // Fetch rates
   const fetchRates = async () => {

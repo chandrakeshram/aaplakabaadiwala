@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // The main BookPickup component
 export default function BookPickup() {
@@ -32,7 +33,7 @@ export default function BookPickup() {
     try {
       // API call to your backend to create a new pickup
       // The fetch URL is now a relative path that starts with /api
-      const response = await fetch('/api/pickups/create', {
+      const response = await fetch(`${API_BASE_URL}/api/pickups/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

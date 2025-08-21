@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2, Trash2, Undo2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -33,7 +33,7 @@ export default function AdminPanel() {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('Authentication token not found.');
 
-      const pickupsRes = await fetch('/api/pickups', {
+      const pickupsRes = await fetch(`${API_BASE_URL}/api/pickups`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const pickupsData = await pickupsRes.json();
@@ -68,7 +68,7 @@ export default function AdminPanel() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/pickups/${pickupId}/status`, {
+      const response = await fetch(`${API_BASE_URL}/api/pickups/${pickupId}/status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

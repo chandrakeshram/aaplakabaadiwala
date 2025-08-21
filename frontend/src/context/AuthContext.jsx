@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Create context
 const AuthContext = createContext(null);
@@ -25,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
   // Login function with real backend API call
   const login = async (email, password) => {
-    const response = await fetch("/api/auth/login", {
+    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -43,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
   // Register function with real backend API call
   const register = async (name, email, password) => {
-    const response = await fetch("/api/auth/register", {
+    const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password }),
