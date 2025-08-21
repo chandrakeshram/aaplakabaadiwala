@@ -8,6 +8,7 @@ import adminRoutes from './routes/admin.js';
 import { protect, admin } from './middlewares/auth.js';
 import ratesRoutes from './routes/rates.js';
 import zonesRouter from "./routes/zones.js";
+import path from "path";
 
 
 
@@ -31,4 +32,11 @@ app.use('/api/rates', protect,ratesRoutes);
 app.use("/api/zones", zonesRouter);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, 'dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });

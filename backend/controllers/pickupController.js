@@ -1,14 +1,12 @@
 import Pickup from '../models/Pickup.js';
 import axios from "axios";
-
+import dotenv from "dotenv";
+dotenv.config();
 // WhatsApp Cloud API credentials (store in .env file)
 const WHATSAPP_API_URL = "https://graph.facebook.com/v21.0";
-const WHATSAPP_ACCESS_TOKEN="EAARlCwPtX00BPL15sdfZB7ZBKqm6HmSFk8NLJQbFViwDDgXq1OFw4aOa33A0nYBqAZBOJ9PM1JmTcGfbD1exGPl8nAEL1rdaQUvoclgW3RZCjZBHdNNscw2IsdNZChCDv73wQ2evxNTRcdzTkZCft9nZC8x2IE6y8lbtlZCccemdaMSTI7NlyYnbQCFYn9ZCjLPZBwZAjioZAtYmFiw3zgXWEM5WKjUj4uAAzBV23j8zr6kGUeQZDZD"
-const WHATSAPP_PHONE_NUMBER_ID="684957801376808"
-const OWNER_PHONE_NUMBER="917875843473"
-const PHONE_NUMBER_ID = WHATSAPP_PHONE_NUMBER_ID; 
-const ACCESS_TOKEN = WHATSAPP_ACCESS_TOKEN;
-const phone_no = OWNER_PHONE_NUMBER;
+const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID; 
+const ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
+const phone_no = process.env.OWNER_PHONE_NUMBER;
 
 /**
  * Send a WhatsApp message using Meta's Cloud APIs
@@ -23,10 +21,10 @@ const sendWhatsappNotification = async (to, templateName, templateData) => {
       `${WHATSAPP_API_URL}/${PHONE_NUMBER_ID}/messages`,
       {
         messaging_product: "whatsapp",
-        to : "917875843473",
+        to ,
         type: "template",
         template: {
-          name: 'mytemplate2',
+          name: templateName,
           language: { code: "en_US" },
           components: [
             {
@@ -73,13 +71,11 @@ export const createPickup = async (req, res) => {
     // Template-specific data for the WhatsApp message
     const templateData = {
       customer_name: userName,
-      address:address,
       phone :phone,
-      date:date,
     };
 
     // Send WhatsApp notification using the template
-    await sendWhatsappNotification(phone_no, "mytemplate", templateData);
+    await sendWhatsappNotification(phone_no, "mytemplate2", templateData);
 
     res
       .status(201)
