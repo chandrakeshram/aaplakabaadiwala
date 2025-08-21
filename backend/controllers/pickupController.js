@@ -3,7 +3,7 @@ import axios from "axios";
 
 // WhatsApp Cloud API credentials (store in .env file)
 const WHATSAPP_API_URL = "https://graph.facebook.com/v21.0";
-const WHATSAPP_ACCESS_TOKEN="EAARlCwPtX00BPFDAIq5NKnQ9ZBY5wSyqZASZAPsDjE2eBPAlT01fjIaxpEnrYaM95jaxoGsTjXfqChvF00KWGrBJ7eLeLSZBBQgb88FucbKXvZClTYgVt4ijlZCVine7XcDb6xn4aiH47ZAY3Edr5P3Nxi9XNEfuIIKUrK6o88eIiXSbiI6BjgZCzCJhzal7lx35tBDkrGI10KE5fGM5gplC4oL4Q5O7fkdHAZBzwc7pKs7UZD"
+const WHATSAPP_ACCESS_TOKEN="EAARlCwPtX00BPL15sdfZB7ZBKqm6HmSFk8NLJQbFViwDDgXq1OFw4aOa33A0nYBqAZBOJ9PM1JmTcGfbD1exGPl8nAEL1rdaQUvoclgW3RZCjZBHdNNscw2IsdNZChCDv73wQ2evxNTRcdzTkZCft9nZC8x2IE6y8lbtlZCccemdaMSTI7NlyYnbQCFYn9ZCjLPZBwZAjioZAtYmFiw3zgXWEM5WKjUj4uAAzBV23j8zr6kGUeQZDZD"
 const WHATSAPP_PHONE_NUMBER_ID="684957801376808"
 const OWNER_PHONE_NUMBER="917875843473"
 const PHONE_NUMBER_ID = WHATSAPP_PHONE_NUMBER_ID; 
@@ -26,16 +26,14 @@ const sendWhatsappNotification = async (to, templateName, templateData) => {
         to : "917875843473",
         type: "template",
         template: {
-          name: 'mytemplate',
-          language: { code: "en" },
+          name: 'mytemplate2',
+          language: { code: "en_US" },
           components: [
             {
               type: "body",
               parameters: [
                 { type: "text", text: templateData.customer_name }, // {{1}}
-                { type: "text", text: templateData.address },       // {{2}}
-                { type: "text", text: templateData.phone },         // {{3}}
-                { type: "text", text: templateData.date },          // {{4}}
+                { type: "text", text: templateData.phone },         // {{2}}
               ],
             },
           ],

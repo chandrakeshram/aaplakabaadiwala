@@ -40,7 +40,7 @@ export default function Rates() {
     district: "",
   });
 
-  const API_URL = "http://localhost:5001/api/rates";
+  const API_URL = "/api/rates";
 
   // Fetch rates
   const fetchRates = async () => {
