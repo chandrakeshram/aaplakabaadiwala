@@ -9,6 +9,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const containerVariants = {
   hidden: { opacity: 0, y: 20 },
